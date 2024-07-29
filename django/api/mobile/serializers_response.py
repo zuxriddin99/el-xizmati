@@ -6,6 +6,8 @@ from fcm_django.models import FCMDevice
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from apps.users.models import User
+
 
 class BaseResponseSerializer(serializers.Serializer):
     data = serializers.JSONField(default={}, required=False)
@@ -26,7 +28,13 @@ class AuthVerifyResponseSerializer(serializers.Serializer):
 class AuthVerifyResponseDataSerializer(BaseResponseSerializer):
     data = AuthVerifyResponseSerializer()
 
-# class AuthSetUserInfoResponseSerializer(serializers.Serializer):
-#     class Meta:
-#         model = User
-#         fields = ('first_name', 'last_name', 'email')
+
+class AuthSetUserInfoResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'photo', 'pasport_serial_number', 'role', 'phone_number')
+
+
+class AuthSetUserInfoResponseDataSerializer(BaseResponseSerializer):
+    data = AuthSetUserInfoResponseSerializer()
+

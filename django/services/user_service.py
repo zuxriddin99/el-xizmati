@@ -1,6 +1,7 @@
 import random
 
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, ParseError
+from rest_framework import exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.models import User, UserAction
@@ -41,9 +42,10 @@ class AuthService:
 
     @staticmethod
     def set_user_info(user: User, **kwargs):
-        if not user:
-            raise ValidationError(detail='User does not exist', code="USER_DOES_NOT_EXIST")
+        if user.is_anonymous:
+            raise exceptions.NotFound(detail='User does not exist', code="USER_DOES_NOT_EXIST")
         for key, value in kwargs.items():
             setattr(user, key, value)
+
         user.save()
         return user

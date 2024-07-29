@@ -17,7 +17,6 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -28,7 +27,6 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-krgw8smzy-fd7v
 DEBUG = bool(os.environ.get("DEBUG", True))
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -80,7 +78,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'conf.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -96,7 +93,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -109,7 +105,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -134,7 +130,7 @@ SIMPLE_JWT = {
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
-    'AUTH_HEADER_TYPES': ('jwt',),
+    'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
@@ -146,7 +142,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
-
 
 AUTH_USER_MODEL = "users.User"
 
@@ -160,7 +155,6 @@ TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -214,3 +208,24 @@ CELERY_RESULT_EXTENDED = True
 # CELERY BEAT SCHEDULER
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'El-Xizmati',
+    'DESCRIPTION': 'El-Xizmat backend API.',
+    'TOS': True,
+    'VERSION': '1.0.0',
+    'DISABLE_ERRORS_AND_WARNINGS': False,
+    'CONTACT': {"email": "zux.828@gmail.com"},
+    'GET_MOCK_REQUEST': 'drf_spectacular.plumbing.build_mock_request',
+    'SORT_OPERATIONS': False,
+    'SERVE_AUTHENTICATION': ["rest_framework_simplejwt.authentication.JWTAuthentication"],
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+        "filter": True,  # включить поиск по тегам
+    },
+    "PERSIST_AUTH": True,
+    "SECURITY_DEFINITIONS": {"basic": {"type": "basic"}},
+
+}
