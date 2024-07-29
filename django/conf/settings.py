@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework",
     "rest_framework_tracking",
+    "fcm_django",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -114,6 +116,11 @@ REST_FRAMEWORK = {
     ),
     # 'DEFAULT_PAGINATION_CLASS': 'conf.pagination.CustomPagination',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "EXCEPTION_HANDLER": "conf.renderer.custom_exception_handler",
+    "DEFAULT_RENDERER_CLASSES": (
+        "conf.renderer.ResponseJsonRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
 }
 
 SIMPLE_JWT = {
