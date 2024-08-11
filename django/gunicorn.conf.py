@@ -1,6 +1,5 @@
 import multiprocessing
 
-
 wsgi_app = "conf.wsgi"
 limit_request_line = 0
 chdir = "/django/"

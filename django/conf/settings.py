@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,22 +31,31 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
-INSTALLED_APPS = [
+BASE_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_celery_beat',
-    "django_celery_results",
-    "apps.users",
-    "drf_spectacular",
+    "django_filters",
+]
+
+LIBS = [
     "rest_framework",
     "rest_framework_tracking",
     "fcm_django",
-    "django_filters",
+    "drf_spectacular",
+    'django_celery_beat',
+    "django_celery_results",
+
 ]
+APPS = [
+    "apps.users",
+    "apps.main",
+    "apps.ads",
+]
+INSTALLED_APPS = BASE_APPS + LIBS + APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

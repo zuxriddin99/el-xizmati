@@ -1,7 +1,5 @@
-from django.contrib import admin
-
 from apps.users.models import User, UserAction
-
+from django.contrib import admin
 
 # Register your models here.
 

@@ -2,12 +2,11 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
 
+from api.mobile import serializers, serializers_response
 from api.views import GenericAPIView
 from services.user_service import AuthService
-from api.mobile import serializers
-from api.mobile import serializers_response
-from rest_framework.response import Response
 
 
 class AuthAPIView(GenericAPIView):

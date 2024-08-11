@@ -1,11 +1,9 @@
-from django.db import models
-
-from django.contrib.auth.models import AbstractUser, Permission
-from django.utils.translation import gettext_lazy as _
-
 from apps.base_app.models import BaseModel
 from apps.users.managers import CustomUserManager
 from apps.users.validator import validate_uzbekistan_phone
+from django.contrib.auth.models import AbstractUser, Permission
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
@@ -50,3 +48,15 @@ class UserAction(BaseModel):
 
     def __str__(self):
         return f"{self.phone_number} | {self.code} "
+
+
+class NotificationTypeEnum(models.TextChoices):
+    NEW_MSG = "new_msg", _('New Message')
+    OFFER_ACCEPT = "offer_accept", _('Offer Accepted')
+    OFFER_REJECT = "offer_reject", _('Offer Rejected')
+    INFO = "info", _('Info')
+
+
+class UserNotification(BaseModel):
+    notif_type = models.CharField(
+        choices=NotificationTypeEnum.choices, max_length=20, default=NotificationTypeEnum.INFO)

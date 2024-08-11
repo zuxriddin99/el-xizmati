@@ -24,6 +24,7 @@ flower = "^2.0.1"
 pillow = "^10.4.0"
 drf-spectacular = "^0.27.2"
 drf-api-tracking = "^1.8.4"
+isort = "^5.13.2"
 
 
 [build-system]

@@ -1,7 +1,7 @@
 import random
 
-from rest_framework.exceptions import ValidationError, ParseError
 from rest_framework import exceptions
+from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.models import User, UserAction
