@@ -57,6 +57,23 @@ class NotificationTypeEnum(models.TextChoices):
     INFO = "info", _('Info')
 
 
+def user_notif_image_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT / user_<id>/ad_<id>/<filename>
+    return f"user_{instance.ad.owner_id}/notifications/notif_{instance.id}/{filename}"
+
+
 class UserNotification(BaseModel):
+    user = models.ForeignKey(User, related_name="notifications", on_delete=models.CASCADE)
     notif_type = models.CharField(
         choices=NotificationTypeEnum.choices, max_length=20, default=NotificationTypeEnum.INFO)
+    title = models.CharField(max_length=250)
+    description = models.TextField(default="")
+    image = models.ImageField(upload_to=user_notif_image_directory_path, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = _("User Notification")
+        verbose_name_plural = _("User Notifications")
+        db_table = "user_notifications"
