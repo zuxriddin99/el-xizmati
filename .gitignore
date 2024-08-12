@@ -3,5 +3,5 @@ django/db.sqlite3
 mounts
 .idea
 media
-#locale_files
+locale_files
 db.sqlite3
