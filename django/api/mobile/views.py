@@ -6,12 +6,15 @@ from rest_framework.response import Response
 
 from api.mobile import serializers, serializers_response
 from api.views import GenericAPIView
+from conf.pagination import CustomPagination
+from services.category_service import CategoryService
 from services.user_service import AuthService
 
 
 class AuthAPIView(GenericAPIView):
     permission_classes = [permissions.AllowAny]
     auth_service = AuthService()
+
     # parser_classes = [MultiPartParser]
 
     @extend_schema(
@@ -63,5 +66,32 @@ class AuthAPIView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = self.request.user
         data = self.auth_service.set_user_info(user=user, **serializer.validated_data)
-        result = self.get_response_data(serializers_response.AuthSetUserInfoResponseSerializer, data, context=self.get_serializer_context())
+        result = self.get_response_data(serializers_response.AuthSetUserInfoResponseSerializer, data,
+                                        context=self.get_serializer_context())
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class CategoriesAPIView(GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+    categories_service = CategoryService()
+    # parser_classes = [MultiPartParser]
+
+    @extend_schema(
+        tags=["categories"],
+        request=None,
+        responses={
+            status.HTTP_200_OK: serializers_response.CategoriesResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Categories list",
+        description="Categories list",
+    )
+    def categories_list(self, request, *args, **kwargs):
+        categories = self.categories_service.get_categories()
+
+        result = self.get_response_data(
+            serializer_class=serializers_response.CategoriesSerializer,
+            instance=categories,
+            many=True
+        )
         return Response(result, status=status.HTTP_200_OK)

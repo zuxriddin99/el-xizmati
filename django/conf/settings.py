@@ -120,7 +120,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    # 'DEFAULT_PAGINATION_CLASS': 'conf.pagination.CustomPagination',
+    'DEFAULT_PAGINATION_CLASS': 'conf.pagination.CustomPagination',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     "EXCEPTION_HANDLER": "conf.renderer.custom_exception_handler",
     "DEFAULT_RENDERER_CLASSES": (

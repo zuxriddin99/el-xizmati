@@ -7,12 +7,22 @@ from fcm_django.models import FCMDevice
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from apps.ads.models import Category
 from apps.users.models import User
 
 
 class BaseResponseSerializer(serializers.Serializer):
     data = serializers.JSONField(default={}, required=False)
     error = serializers.JSONField(default={}, required=False)
+
+
+class BasePaginationSerializer(serializers.Serializer):
+    page = serializers.IntegerField()
+    total_objects = serializers.IntegerField()
+    current_page_size = serializers.IntegerField()
+    limit = serializers.IntegerField()
+    total_pages = serializers.IntegerField()
+    results = serializers.ListField(child=serializers.DictField())
 
 
 class TokensSerializer(serializers.Serializer):
@@ -39,3 +49,16 @@ class AuthSetUserInfoResponseSerializer(serializers.ModelSerializer):
 class AuthSetUserInfoResponseDataSerializer(BaseResponseSerializer):
     data = AuthSetUserInfoResponseSerializer()
 
+
+class CategoriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["id", "name"]
+
+
+class CatgoriesPaginationSerializer(BasePaginationSerializer):
+    results = CategoriesSerializer(many=True)
+
+
+class CategoriesResponseSerializer(BaseResponseSerializer):
+    data = CatgoriesPaginationSerializer()

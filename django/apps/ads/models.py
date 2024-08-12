@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Category(BaseModel):
+    icon = models.FileField(upload_to="categories/", null=True)
     name = models.CharField(max_length=100, unique=True)
     order = models.IntegerField(default=0)
 

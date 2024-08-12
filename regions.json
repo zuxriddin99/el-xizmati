@@ -1,0 +1,128 @@
+[
+    {
+        "id": 3,
+        "text": {
+            "oz": "Аndijon viloyati",
+            "uz": "Андижон вилояти",
+            "ru": "Андижанская область",
+            "en": "Andijan region"
+        }
+    },
+    {
+        "id": 13,
+        "text": {
+            "oz": "Buxoro viloyati",
+            "uz": "Бухоро вилояти",
+            "ru": "Бухарская область",
+            "en": "Bukhara region"
+        }
+    },
+    {
+        "id": 11,
+        "text": {
+            "oz": "Fargʼona viloyati",
+            "uz": "Фарғона вилояти",
+            "ru": "Ферганская область",
+            "en": "Fergana region"
+        }
+    },
+    {
+        "id": 4,
+        "text": {
+            "oz": "Jizzax viloyati",
+            "uz": "Жиззах вилояти",
+            "ru": "Джизакская область",
+            "en": "Jizzakh region"
+        }
+    },
+    {
+        "id": 5,
+        "text": {
+            "oz": "Qashqadaryo viloyati",
+            "uz": "Қашқадарё вилояти",
+            "ru": "Кашкадарьинская область",
+            "en": "Kashkadarya region"
+        }
+    },
+    {
+        "id": 12,
+        "text": {
+            "oz": "Xorazm viloyati",
+            "uz": "Хоразм вилояти",
+            "ru": "Хорезмская область",
+            "en": "Khorezm region"
+        }
+    },
+    {
+        "id": 7,
+        "text": {
+            "oz": "Namangan viloyati",
+            "uz": "Наманган вилояти",
+            "ru": "Наманганская область",
+            "en": "Namangan region"
+        }
+    },
+    {
+        "id": 6,
+        "text": {
+            "oz": "Navoiy viloyati",
+            "uz": "Навоий вилояти",
+            "ru": "Навоийская область",
+            "en": "Navoi region"
+        }
+    },
+    {
+        "id": 2,
+        "text": {
+            "oz": "Qоraqalpog'iston Respublikasi",
+            "uz": "Қорақалпоғистон Республикаси",
+            "ru": "Республика Каракалпакстан",
+            "en": "Republic of Karakalpakstan"
+        }
+    },
+    {
+        "id": 8,
+        "text": {
+            "oz": "Samarqand viloyati",
+            "uz": "Самарқанд вилояти",
+            "ru": "Самаркандская область",
+            "en": "Samarkand region"
+        }
+    },
+    {
+        "id": 9,
+        "text": {
+            "oz": "Surxondaryo viloyati",
+            "uz": "Сурхондарё вилояти",
+            "ru": "Сурхандарьинская область",
+            "en": "Surkhandarya region"
+        }
+    },
+    {
+        "id": 10,
+        "text": {
+            "oz": "Sirdaryo viloyati",
+            "uz": "Сирдарё вилояти",
+            "ru": "Сырдарьинская область",
+            "en": "Syrdarya region"
+        }
+    },
+    {
+        "id": 1,
+        "text": {
+            "oz": "Toshkent shahri",
+            "uz": "Тошкент шаҳри",
+            "ru": "город Ташкент",
+            "en": "Tashkent city"
+        }
+    },
+    {
+        "id": 14,
+        "text": {
+            "oz": "Toshkent viloyati",
+            "uz": "Тошкент вилояти",
+            "ru": "Ташкентская область",
+            "en": "Tashkent region"
+        }
+    }
+]
