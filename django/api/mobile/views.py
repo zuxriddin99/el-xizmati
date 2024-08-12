@@ -92,6 +92,7 @@ class CategoriesAPIView(GenericAPIView):
         result = self.get_response_data(
             serializer_class=serializers_response.CategoriesSerializer,
             instance=categories,
-            many=True
+            many=True,
+            context=self.get_serializer_context()
         )
         return Response(result, status=status.HTTP_200_OK)
