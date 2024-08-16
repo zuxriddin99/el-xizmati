@@ -1,12 +1,15 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 
-from api.mobile import serializers, serializers_response
+from api.mobile import serializers, serializers_response, serializers_params
+from api.mobile.filters import DistrictsFilter, RegionsFilter
 from api.views import GenericAPIView
 from conf.pagination import CustomPagination
+from services.address_service import RegionService, DistrictService
 from services.category_service import CategoryService
 from services.user_service import AuthService
 
@@ -92,6 +95,62 @@ class CategoriesAPIView(GenericAPIView):
         result = self.get_response_data(
             serializer_class=serializers_response.CategoriesSerializer,
             instance=categories,
+            many=True,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class RegionsAPIView(GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+    region_service = RegionService()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RegionsFilter
+
+    @extend_schema(
+        tags=["addresses"],
+        parameters=[serializers_params.SearchSerializer],
+        responses={
+            status.HTTP_200_OK: serializers_response.RegionsResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Regions list",
+        description="Regions list",
+    )
+    def regions_list(self, request, *args, **kwargs):
+        regions = self.region_service.get_regions()
+        filtered_queryset = self.filter_queryset(regions)
+
+        result = self.get_response_data(
+            serializer_class=serializers_response.RegionsSerializer,
+            instance=filtered_queryset,
+            many=True,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+class DistrictAPIView(GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+    district_service = DistrictService()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = DistrictsFilter
+
+    @extend_schema(
+        tags=["addresses"],
+        parameters=[serializers_params.DistrictParamsSerializer],
+        responses={
+            status.HTTP_200_OK: serializers_response.DistrictsResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Districts list",
+        description="Districts list",
+    )
+    def districts_list(self, request, *args, **kwargs):
+        districts = self.district_service.get_districts()
+        filtered_queryset = self.filter_queryset(districts)
+        result = self.get_response_data(
+            serializer_class=serializers_response.DistrictsSerializer,
+            instance=filtered_queryset,
             many=True,
             context=self.get_serializer_context()
         )

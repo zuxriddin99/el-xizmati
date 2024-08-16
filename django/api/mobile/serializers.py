@@ -23,7 +23,7 @@ class AuthVerifySmsSerializer(serializers.Serializer):
 class AuthUserSetInfoSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-    pasport_serial_number = serializers.CharField(required=True)
+    passport_serial_number = serializers.CharField(required=True)
     role = serializers.CharField(required=True)
     photo = CustomImageField(required=True)
 
@@ -33,7 +33,8 @@ class AuthUserSetInfoSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "language",
-            "pasport_serial_number",
+            "passport_serial_number",
             "role",
             "photo",
+            "district",
         ]

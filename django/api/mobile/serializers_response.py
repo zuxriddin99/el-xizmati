@@ -8,6 +8,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from apps.ads.models import Category
+from apps.main.models import Region, District
 from apps.users.models import User
 
 
@@ -43,7 +44,7 @@ class AuthVerifyResponseDataSerializer(BaseResponseSerializer):
 class AuthSetUserInfoResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'photo', 'pasport_serial_number', 'role', 'phone_number')
+        fields = ('first_name', 'last_name', 'photo', 'passport_serial_number', 'role', 'phone_number')
 
 
 class AuthSetUserInfoResponseDataSerializer(BaseResponseSerializer):
@@ -56,9 +57,39 @@ class CategoriesSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "icon"]
 
 
-class CatgoriesPaginationSerializer(BasePaginationSerializer):
+class CategoriesPaginationSerializer(BasePaginationSerializer):
     results = CategoriesSerializer(many=True)
 
 
 class CategoriesResponseSerializer(BaseResponseSerializer):
-    data = CatgoriesPaginationSerializer()
+    data = CategoriesPaginationSerializer()
+
+
+class RegionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ["id", "name"]
+
+
+class RegionsPaginationSerializer(BasePaginationSerializer):
+    results = RegionsSerializer(many=True)
+
+
+class RegionsResponseSerializer(BaseResponseSerializer):
+    data = RegionsPaginationSerializer()
+
+
+class DistrictsSerializer(serializers.ModelSerializer):
+    region = RegionsSerializer()
+
+    class Meta:
+        model = District
+        fields = ["id", "name", "region"]
+
+
+class DistrictsPaginationSerializer(BasePaginationSerializer):
+    results = DistrictsSerializer(many=True)
+
+
+class DistrictsResponseSerializer(BaseResponseSerializer):
+    data = DistrictsPaginationSerializer()

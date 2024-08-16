@@ -1,4 +1,5 @@
 from apps.base_app.models import BaseModel
+from apps.main.models import District
 from apps.users.managers import CustomUserManager
 from apps.users.validator import validate_uzbekistan_phone
 from django.contrib.auth.models import AbstractUser, Permission
@@ -23,8 +24,10 @@ class User(AbstractUser, BaseModel):
         max_length=20, unique=True, verbose_name="Phone Number", validators=[validate_uzbekistan_phone])
     language = models.CharField(max_length=2, choices=LanguageEnum.choices, default=LanguageEnum.UZ, blank=True)
     photo = models.ImageField(upload_to="user_photos/", null=True, blank=True)
-    pasport_serial_number = models.CharField(blank=True, null=True, max_length=20)
+    passport_serial_number = models.CharField(blank=True, null=True, max_length=20)
     role = models.CharField(choices=UserRoleEnum.choices, default=UserRoleEnum.EMPLOYER, max_length=10)
+    district = models.ForeignKey(District, on_delete=models.PROTECT, null=True, blank=True)
+
     username = None
     groups = None
     user_permissions = None
