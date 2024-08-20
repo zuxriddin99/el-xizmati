@@ -19,6 +19,8 @@ services:
       service: django_base
     depends_on:
       - postgres
+    expose:
+      - "8000"
     logging:
       options:
         max-size: "10m"
