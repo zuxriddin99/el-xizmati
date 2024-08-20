@@ -25,6 +25,7 @@ pillow = "^10.4.0"
 drf-spectacular = "^0.27.2"
 drf-api-tracking = "^1.8.4"
 isort = "^5.13.2"
+typing-extensions = "^4.12.2"
 
 
 [build-system]
