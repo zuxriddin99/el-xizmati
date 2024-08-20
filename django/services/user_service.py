@@ -11,7 +11,8 @@ class AuthService:
 
     def send_sms_to_phone(self, **kwargs):
         phone_number = kwargs.get('phone_number')
-        code = self.generate_code()
+        # code = self.generate_code()
+        code = "0000"
         user, _ = UserAction.objects.update_or_create(phone_number=phone_number, defaults={'code': code})
         # todo need to add smm sender function
 
