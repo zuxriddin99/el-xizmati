@@ -8,8 +8,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-food_delivery}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-food_delivery}
       POSTGRES_DB: ${POSTGRES_DB:-food_delivery}
-    ports:
-      - ${POSTGRES_PORT:-5432}:5432
     volumes:
       - ./mounts/postgres/pg_data:/var/lib/postgresql/data
       - ./mounts/postgres/backups:/backups
@@ -94,8 +92,6 @@ services:
     volumes:
       - ./django:/django
       - ./mounts/django/logs:/django/logs
-    ports:
-      - "5555:5555"
     depends_on:
       - redis
       - django
@@ -111,7 +107,7 @@ services:
       - ./mounts/redis_data:/data
       - ./mounts/redis_conf:/conf
     ports:
-      - ${REDIS_PORT:-6379}:6379
+      - :6379
     logging:
       options:
         max-size: "10m"

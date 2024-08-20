@@ -5,8 +5,8 @@ services:
     extends:
       file: common.yml
       service: postgres_base
-    ports:
-      - ${POSTGRES_PORT:-5432}:5432
+    expose:
+      - ${POSTGRES_PORT:-5432}
     logging:
       options:
         max-size: "10m"
@@ -29,6 +29,8 @@ services:
     extends:
       file: common.yml
       service: redis_base
+    expose:
+      - ${REDIS_PORT:-6379}
   celery_worker:
       env_file:
         - .env
@@ -42,11 +44,13 @@ services:
         file: common.yml
         service: celery_beat_base
   flower:
-        env_file:
-          - .env
-        extends:
-          file: common.yml
-          service: flower_base
+      env_file:
+        - .env
+      extends:
+        file: common.yml
+        service: flower_base
+      expose:
+        - "5555"
 
   nginx:
     env_file:
