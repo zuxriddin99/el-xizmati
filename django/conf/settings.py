@@ -257,6 +257,6 @@ FCM_DJANGO_SETTINGS = {
     # default: False
     "DELETE_INACTIVE_DEVICES": True,
 }
-FIREBASE_CREDS = os.environ.get("FIREBASE_CREDS", default="media/firebase_creds.json")
-cred = credentials.Certificate(FIREBASE_CREDS)
-firebase_admin.initialize_app(cred)
+# FIREBASE_CREDS = os.environ.get("FIREBASE_CREDS", default="media/firebase_creds.json")
+# cred = credentials.Certificate(FIREBASE_CREDS)
+# firebase_admin.initialize_app(cred)
