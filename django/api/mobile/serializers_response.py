@@ -7,7 +7,7 @@ from fcm_django.models import FCMDevice
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from apps.ads.models import Category
+from apps.ads.models import Category, AD, ADMedia
 from apps.main.models import Region, District
 from apps.users.models import User
 
@@ -93,3 +93,40 @@ class DistrictsPaginationSerializer(BasePaginationSerializer):
 
 class DistrictsResponseSerializer(BaseResponseSerializer):
     data = DistrictsPaginationSerializer()
+
+
+class TESTJWTResponseSerializer(BaseResponseSerializer):
+    data = TokensSerializer()
+
+class ADMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ADMedia
+        fields = [
+            "id",
+            "file",
+            "media_type",
+        ]
+
+class AdDetailSerializer(serializers.ModelSerializer):
+    medias = ADMediaSerializer(many=True, source="ad_medias", required=False)
+
+    class Meta:
+        model = AD
+        fields = [
+            "id",
+            "owner",
+            "name",
+            "description",
+            "price",
+            "category",
+            "work_type",
+            "district",
+            "latitude",
+            "longitude",
+            "address",
+            "medias",
+        ]
+
+
+class ADDetailResponseSerializer(BaseResponseSerializer):
+    data = AdDetailSerializer()

@@ -33,7 +33,8 @@ class AD(BaseModel):
     district = models.ForeignKey("main.District", on_delete=models.CASCADE, related_name="district_ads")
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
-    
+    address = models.CharField(default="", max_length=300, blank=True)
+
     def __str__(self):
         return self.name
 

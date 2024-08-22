@@ -10,7 +10,9 @@ from api.mobile.filters import DistrictsFilter, RegionsFilter
 from api.views import GenericAPIView
 from conf.pagination import CustomPagination
 from services.address_service import RegionService, DistrictService
+from services.ads_service import AdsService
 from services.category_service import CategoryService
+from services.test_service import GetJwtService
 from services.user_service import AuthService
 
 
@@ -77,7 +79,6 @@ class AuthAPIView(GenericAPIView):
 class CategoriesAPIView(GenericAPIView):
     permission_classes = [permissions.AllowAny]
     categories_service = CategoryService()
-    # parser_classes = [MultiPartParser]
 
     @extend_schema(
         tags=["categories"],
@@ -129,6 +130,7 @@ class RegionsAPIView(GenericAPIView):
         )
         return Response(result, status=status.HTTP_200_OK)
 
+
 class DistrictAPIView(GenericAPIView):
     permission_classes = [permissions.AllowAny]
     district_service = DistrictService()
@@ -152,6 +154,86 @@ class DistrictAPIView(GenericAPIView):
             serializer_class=serializers_response.DistrictsSerializer,
             instance=filtered_queryset,
             many=True,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class ADSAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    ads_service = AdsService()
+    filter_backends = [DjangoFilterBackend]
+
+    # filterset_class = DistrictsFilter
+
+    @extend_schema(
+        tags=["ads"],
+        request={"multipart/form-data": serializers.AdCreateSerializer},
+        responses={
+            status.HTTP_201_CREATED: serializers_response.ADDetailResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Ads create",
+        description="Ads create",
+    )
+    def ads_create(self, request, *args, **kwargs):
+        serializer = serializers.AdCreateSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        user = self.request.user
+        ad = self.ads_service.ad_create_service(user=user, **serializer.validated_data)
+        result = self.get_response_data(
+            serializer_class=serializers_response.AdDetailSerializer,
+            instance=ad,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+
+    # @extend_schema(
+    #     tags=["ads"],
+    #     parameters=[],
+    #     responses={
+    #         status.HTTP_201_CREATED: serializers_response.ADDetailResponseSerializer,
+    #         status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+    #     },
+    #     summary="Ads create",
+    #     description="Ads create",
+    # )
+    # def ads_list(self, request, *args, **kwargs):
+    #     serializer = serializers.AdCreateSerializer(data=request.data, context=self.get_serializer_context())
+    #     serializer.is_valid(raise_exception=True)
+    #     user = self.request.user
+    #     ad = self.ads_service.ad_create_service(user=user, **serializer.validated_data)
+    #     result = self.get_response_data(
+    #         serializer_class=serializers_response.AdDetailSerializer,
+    #         instance=ad,
+    #         context=self.get_serializer_context()
+    #     )
+    #     return Response(result, status=status.HTTP_200_OK)
+
+
+class TestAPIView(GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+    test_service = GetJwtService()
+
+    @extend_schema(
+        tags=["test"],
+        request={"application/json": serializers.GetUserJwtSerializer},
+        responses={
+            status.HTTP_200_OK: serializers_response.TESTJWTResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Get jwt",
+        description="Get jwt",
+    )
+    def get_jwt(self, request, *args, **kwargs):
+        serializer = serializers.GetUserJwtSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        user_id = serializer.validated_data["user_id"]
+        tokens = self.test_service.get_jwt(user_id)
+        result = self.get_response_data(
+            serializer_class=serializers_response.TokensSerializer,
+            instance=tokens,
             context=self.get_serializer_context()
         )
         return Response(result, status=status.HTTP_200_OK)

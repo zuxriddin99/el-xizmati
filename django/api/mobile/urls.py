@@ -1,4 +1,4 @@
-from api.mobile.views import AuthAPIView, CategoriesAPIView, DistrictAPIView, RegionsAPIView
+from api.mobile.views import AuthAPIView, CategoriesAPIView, DistrictAPIView, RegionsAPIView, ADSAPIView, TestAPIView
 from django.urls import include, path
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
@@ -18,5 +18,11 @@ urlpatterns = [
     # Address
     path("districts/", DistrictAPIView.as_view({"get": "districts_list"}), name="districts"),
     path("regions/", RegionsAPIView.as_view({"get": "regions_list"}), name="regions"),
+
+    # AD
+    path("ads/", ADSAPIView.as_view({"post": "ads_create"}), name="ads"),
+
+    # Test routes
+    path("test/get-token/", TestAPIView.as_view({"post": "get_jwt"}), name="test"),
 
 ]

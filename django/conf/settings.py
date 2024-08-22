@@ -14,6 +14,8 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
+import firebase_admin
+from firebase_admin import credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -239,3 +241,22 @@ SPECTACULAR_SETTINGS = {
     "SECURITY_DEFINITIONS": {"basic": {"type": "basic"}},
 
 }
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600
+
+FCM_DJANGO_SETTINGS = {
+    # an instance of firebase_admin.App to be used as default for all fcm-django requests
+    # default: None (the default Firebase app)
+    "DEFAULT_FIREBASE_APP": None,
+    # default: _('FCM Django')
+    "APP_VERBOSE_NAME": "FCM Django",
+    # true if you want to have only one active device per registered user at a time
+    # default: False
+    "ONE_DEVICE_PER_USER": False,
+    # devices to which notifications cannot be sent,
+    # are deleted upon receiving error response from FCM
+    # default: False
+    "DELETE_INACTIVE_DEVICES": True,
+}
+FIREBASE_CREDS = os.environ.get("FIREBASE_CREDS", default="media/firebase_creds.json")
+cred = credentials.Certificate(FIREBASE_CREDS)
+firebase_admin.initialize_app(cred)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.ads.models import Category
+from apps.ads.models import Category, AD, ADMedia
 
 
 # Register your models here.
@@ -8,3 +8,14 @@ from apps.ads.models import Category
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "order"]
+
+
+class ADMediaInline(admin.TabularInline):
+    model = ADMedia
+    extra = 0
+
+
+@admin.register(AD)
+class ADAdmin(admin.ModelAdmin):
+    list_display = ["id", "owner", "name"]
+    inlines = [ADMediaInline]

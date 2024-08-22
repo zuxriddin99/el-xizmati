@@ -2,12 +2,13 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
+from apps.ads.models import AD
 from apps.users.models import User
 from apps.users.validator import validate_uzbekistan_phone
 
 
 @extend_schema_field(OpenApiTypes.BINARY)
-class CustomImageField(serializers.ImageField):
+class CustomFileField(serializers.FileField):
     pass
 
 
@@ -25,7 +26,7 @@ class AuthUserSetInfoSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True)
     passport_serial_number = serializers.CharField(required=True)
     role = serializers.CharField(required=True)
-    photo = CustomImageField(required=True)
+    photo = CustomFileField(required=True)
 
     class Meta:
         model = User
@@ -38,3 +39,24 @@ class AuthUserSetInfoSerializer(serializers.ModelSerializer):
             "photo",
             "district",
         ]
+
+class AdCreateSerializer(serializers.ModelSerializer):
+    medias = serializers.ListField(child=CustomFileField(), required=False)
+
+    class Meta:
+        model = AD
+        fields = [
+            "name",
+            "description",
+            "price",
+            "category",
+            "work_type",
+            "district",
+            "address",
+            "latitude",
+            "longitude",
+            "medias",
+        ]
+
+class GetUserJwtSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(required=False)
