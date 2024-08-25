@@ -66,10 +66,15 @@ class CategoriesResponseSerializer(BaseResponseSerializer):
 
 
 class RegionsSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta:
         model = Region
         fields = ["id", "name"]
 
+    @staticmethod
+    def get_name(obj):
+        return obj.name_uz
 
 class RegionsPaginationSerializer(BasePaginationSerializer):
     results = RegionsSerializer(many=True)
@@ -81,10 +86,14 @@ class RegionsResponseSerializer(BaseResponseSerializer):
 
 class DistrictsSerializer(serializers.ModelSerializer):
     region = RegionsSerializer()
-
+    name = serializers.SerializerMethodField()
     class Meta:
         model = District
         fields = ["id", "name", "region"]
+
+    @staticmethod
+    def get_name(obj):
+        return obj.name_uz
 
 
 class DistrictsPaginationSerializer(BasePaginationSerializer):
