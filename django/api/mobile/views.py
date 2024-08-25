@@ -189,27 +189,27 @@ class ADSAPIView(GenericAPIView):
         return Response(result, status=status.HTTP_200_OK)
 
 
-    # @extend_schema(
-    #     tags=["ads"],
-    #     parameters=[],
-    #     responses={
-    #         status.HTTP_201_CREATED: serializers_response.ADDetailResponseSerializer,
-    #         status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
-    #     },
-    #     summary="Ads create",
-    #     description="Ads create",
-    # )
-    # def ads_list(self, request, *args, **kwargs):
-    #     serializer = serializers.AdCreateSerializer(data=request.data, context=self.get_serializer_context())
-    #     serializer.is_valid(raise_exception=True)
-    #     user = self.request.user
-    #     ad = self.ads_service.ad_create_service(user=user, **serializer.validated_data)
-    #     result = self.get_response_data(
-    #         serializer_class=serializers_response.AdDetailSerializer,
-    #         instance=ad,
-    #         context=self.get_serializer_context()
-    #     )
-    #     return Response(result, status=status.HTTP_200_OK)
+    @extend_schema(
+        tags=["ads"],
+        parameters=[serializers_params.AdsListSerializer],
+        responses={
+            status.HTTP_201_CREATED: serializers_response.ADDetailResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Ads create",
+        description="Ads create",
+    )
+    def ads_list(self, request, *args, **kwargs):
+        serializer = serializers.AdCreateSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        user = self.request.user
+        ad = self.ads_service.ad_create_service(user=user, **serializer.validated_data)
+        result = self.get_response_data(
+            serializer_class=serializers_response.AdDetailSerializer,
+            instance=ad,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class TestAPIView(GenericAPIView):

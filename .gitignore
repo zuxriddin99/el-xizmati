@@ -4,4 +4,4 @@ mounts
 .idea
 media
 locale_files
-db.sqlite3
+django/db.sqlite3

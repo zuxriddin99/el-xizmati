@@ -7,7 +7,7 @@ from apps.ads.models import Category, AD, ADMedia
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "order"]
+    list_display = ["id", "name_uz", "order"]
 
 
 class ADMediaInline(admin.TabularInline):

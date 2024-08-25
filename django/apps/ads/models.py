@@ -3,19 +3,37 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+
 class Category(BaseModel):
     icon = models.FileField(upload_to="categories/", null=True)
-    name = models.CharField(max_length=100, unique=True)
+    name_oz = models.CharField(verbose_name="Uzbek kyril", max_length=150, default="")
+    name_ru = models.CharField(verbose_name="Russian", max_length=150, default="")
+    name_en = models.CharField(verbose_name="English", max_length=150, default="")
+    name_uz = models.CharField(verbose_name="Uzbek latin", max_length=150, default="")
     order = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.name
+        return self.name_uz
 
     class Meta:
         ordering = ('order',)
         verbose_name = 'category'
         verbose_name_plural = 'categories'
         db_table = 'categories'
+
+    def get_name(self, language="en"):
+        match language:
+            case "en":
+                return self.name_en
+            case "ru":
+                return self.name_ru
+            case "oz":
+                return self.name_oz
+            case "uz":
+                return self.name_uz
+            case _:
+                return self.name_uz
+
 
 
 class WorkTypeEnum(models.TextChoices):

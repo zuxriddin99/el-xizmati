@@ -19,6 +19,19 @@ class Region(BaseModel):
         ordering = ['name_en']
         db_table = 'regions'
 
+    def get_name(self, language="en"):
+        match language:
+            case "en":
+                return self.name_en
+            case "ru":
+                return self.name_ru
+            case "oz":
+                return self.name_oz
+            case "uz":
+                return self.name_uz
+            case _:
+                return self.name_uz
+
 
 class District(BaseModel):
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='districts')
@@ -35,3 +48,16 @@ class District(BaseModel):
         verbose_name = 'District'
         ordering = ['name_en']
         db_table = 'districts'
+
+    def get_name(self, language="en"):
+        match language:
+            case "en":
+                return self.name_en
+            case "ru":
+                return self.name_ru
+            case "oz":
+                return self.name_oz
+            case "uz":
+                return self.name_uz
+            case _:
+                return self.name_uz

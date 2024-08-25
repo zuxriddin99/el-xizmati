@@ -12,6 +12,7 @@ class LanguageEnum(models.TextChoices):
     UZ = 'uz', _('Uzbek')
     RU = 'ru', _('Russian')
     EN = 'en', _('English')
+    OZ = 'oz', _('Uzbek kyril')
 
 
 class UserRoleEnum(models.TextChoices):
@@ -38,6 +39,15 @@ class User(AbstractUser, BaseModel):
 
     def __str__(self):
         return str(self.phone_number)
+
+    @property
+    def quantity_ads(self):
+        return self.owner_ads.all().count()
+
+    @property
+    def rating(self):
+        # need count rating
+        return 5
 
 
 class UserAction(BaseModel):

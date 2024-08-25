@@ -3,7 +3,7 @@ from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from apps.ads.models import AD
-from apps.users.models import User
+from apps.users.models import User, UserRoleEnum
 from apps.users.validator import validate_uzbekistan_phone
 
 
@@ -25,8 +25,8 @@ class AuthUserSetInfoSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     passport_serial_number = serializers.CharField(required=True)
-    role = serializers.CharField(required=True)
     photo = CustomFileField(required=True)
+    role = serializers.ChoiceField(choices=UserRoleEnum.choices)
 
     class Meta:
         model = User

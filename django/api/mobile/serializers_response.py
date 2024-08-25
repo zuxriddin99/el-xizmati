@@ -52,9 +52,17 @@ class AuthSetUserInfoResponseDataSerializer(BaseResponseSerializer):
 
 
 class CategoriesSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
         fields = ["id", "name", "icon"]
+
+
+    def get_name(self, obj):
+        language = self.context["request"].headers.get('Accept-Language', 'en')
+        return obj.get_name(language)
+
 
 
 class CategoriesPaginationSerializer(BasePaginationSerializer):
@@ -72,9 +80,11 @@ class RegionsSerializer(serializers.ModelSerializer):
         model = Region
         fields = ["id", "name"]
 
-    @staticmethod
-    def get_name(obj):
-        return obj.name_uz
+    def get_name(self, obj):
+        language = self.context["request"].headers.get('Accept-Language', 'en')
+        return obj.get_name(language)
+
+
 
 class RegionsPaginationSerializer(BasePaginationSerializer):
     results = RegionsSerializer(many=True)
@@ -87,13 +97,26 @@ class RegionsResponseSerializer(BaseResponseSerializer):
 class DistrictsSerializer(serializers.ModelSerializer):
     region = RegionsSerializer()
     name = serializers.SerializerMethodField()
+
     class Meta:
         model = District
         fields = ["id", "name", "region"]
 
-    @staticmethod
-    def get_name(obj):
-        return obj.name_uz
+    def get_name(self, obj):
+        language = self.context["request"].headers.get('Accept-Language', 'en')
+        return obj.get_name(language)
+
+
+class AdDistrictsSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = District
+        fields = ["id", "name"]
+
+    def get_name(self, obj):
+        language = self.context["request"].headers.get('Accept-Language', 'en')
+        return obj.get_name(language)
 
 
 class DistrictsPaginationSerializer(BasePaginationSerializer):
@@ -107,6 +130,7 @@ class DistrictsResponseSerializer(BaseResponseSerializer):
 class TESTJWTResponseSerializer(BaseResponseSerializer):
     data = TokensSerializer()
 
+
 class ADMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ADMedia
@@ -115,6 +139,7 @@ class ADMediaSerializer(serializers.ModelSerializer):
             "file",
             "media_type",
         ]
+
 
 class AdDetailSerializer(serializers.ModelSerializer):
     medias = ADMediaSerializer(many=True, source="ad_medias", required=False)
@@ -139,3 +164,36 @@ class AdDetailSerializer(serializers.ModelSerializer):
 
 class ADDetailResponseSerializer(BaseResponseSerializer):
     data = AdDetailSerializer()
+
+
+class ADOwnerSerializer(serializers.ModelSerializer):
+    rating = serializers.FloatField(source="rating")
+    quantity_ads = serializers.IntegerField(source="quantity_ads")
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "photo",
+            "created_at",
+            "quantity_ads",
+            "rating",
+        ]
+
+
+class AdListSerializer(serializers.ModelSerializer):
+    owner = ADOwnerSerializer()
+    district = serializers.CharField(source="district.name")
+    class Meta:
+        model = AD
+        fields = [
+            "id",
+            "owner",
+            "name",
+            "description",
+            "price",
+            "work_type",
+            "district",
+        ]
