@@ -5,27 +5,33 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class Region(BaseModel):
-    name = models.CharField(max_length=150)
+    name_oz = models.CharField(verbose_name="Uzbek kyril", max_length=150, default="")
+    name_ru = models.CharField(verbose_name="Russian", max_length=150, default="")
+    name_en = models.CharField(verbose_name="English", max_length=150, default="")
+    name_uz = models.CharField(verbose_name="Uzbek latin", max_length=150, default="")
 
     def __str__(self):
-        return self.name
+        return self.name_uz
 
     class Meta:
         verbose_name_plural = 'Regions'
         verbose_name = 'Region'
-        ordering = ['name']
+        ordering = ['name_en']
         db_table = 'regions'
 
 
 class District(BaseModel):
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='districts')
-    name = models.CharField(max_length=150)
+    name_oz = models.CharField(verbose_name="Uzbek kyril", max_length=150, default="")
+    name_ru = models.CharField(verbose_name="Russian", max_length=150, default="")
+    name_en = models.CharField(verbose_name="English", max_length=150, default="")
+    name_uz = models.CharField(verbose_name="Uzbek latin", max_length=150, default="")
 
     def __str__(self):
-        return self.name
+        return self.name_uz
 
     class Meta:
         verbose_name_plural = 'Districts'
         verbose_name = 'District'
-        ordering = ['name']
+        ordering = ['name_en']
         db_table = 'districts'
