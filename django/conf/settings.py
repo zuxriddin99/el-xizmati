@@ -197,7 +197,7 @@ CACHES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ["https://*.zukhriddin.uz", "https://*.zukhriddin.uz", "http://127.0.0.1", "http://localhost", "http://185.43.6.212/"]
+CSRF_TRUSTED_ORIGINS = ["https://*.zukhriddin.uz", "https://*.zukhriddin.uz", "http://127.0.0.1", "http://localhost", "http://185.43.6.212", "http://185.43.6.212:81"]
 
 # CELERY SETTINGS
 
