@@ -21,6 +21,8 @@ services:
       - postgres
     expose:
       - "8000"
+    ports:
+      - "8080:8000"
     logging:
       options:
         max-size: "10m"
