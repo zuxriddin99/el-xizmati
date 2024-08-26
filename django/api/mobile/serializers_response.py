@@ -167,8 +167,8 @@ class ADDetailResponseSerializer(BaseResponseSerializer):
 
 
 class ADOwnerSerializer(serializers.ModelSerializer):
-    rating = serializers.FloatField(source="rating")
-    quantity_ads = serializers.IntegerField(source="quantity_ads")
+    rating = serializers.FloatField(default=0)
+    quantity_ads = serializers.IntegerField(default=0)
 
     class Meta:
         model = User
@@ -185,7 +185,8 @@ class ADOwnerSerializer(serializers.ModelSerializer):
 
 class AdListSerializer(serializers.ModelSerializer):
     owner = ADOwnerSerializer()
-    district = serializers.CharField(source="district.name")
+    district = AdDistrictsSerializer()
+
     class Meta:
         model = AD
         fields = [
@@ -196,4 +197,12 @@ class AdListSerializer(serializers.ModelSerializer):
             "price",
             "work_type",
             "district",
+            "created_at",
         ]
+
+class ADListPaginationResponseSerializer(BasePaginationSerializer):
+    results = AdListSerializer(many=True)
+
+
+class ADListResponseSerializer(BaseResponseSerializer):
+    data = ADListPaginationResponseSerializer()

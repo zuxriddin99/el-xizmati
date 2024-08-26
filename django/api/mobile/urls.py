@@ -20,7 +20,7 @@ urlpatterns = [
     path("regions/", RegionsAPIView.as_view({"get": "regions_list"}), name="regions"),
 
     # AD
-    path("ads/", ADSAPIView.as_view({"post": "ads_create"}), name="ads"),
+    path("ads/", ADSAPIView.as_view({"post": "ads_create", "get": "ads_list"}), name="ads"),
 
     # Test routes
     path("test/get-token/", TestAPIView.as_view({"post": "get_jwt"}), name="test"),

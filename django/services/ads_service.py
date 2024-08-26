@@ -16,3 +16,7 @@ class AdsService:
     @staticmethod
     def get_categories():
         return Category.objects.all()
+
+    @staticmethod
+    def get_ads_list():
+        return AD.objects.all()
