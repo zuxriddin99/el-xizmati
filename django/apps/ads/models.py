@@ -52,7 +52,7 @@ class AD(BaseModel):
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     address = models.CharField(default="", max_length=300, blank=True)
-
+    is_active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
 

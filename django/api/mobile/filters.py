@@ -26,6 +26,8 @@ class RegionsFilter(SearchFilter):
 
 
 class AdsFilter(SearchFilter):
+    region = filters.CharFilter(method="filter_region")
+    district = filters.CharFilter(method="filter_district")
     ordering = filters.ChoiceFilter(method="filter_ordering")
 
     @staticmethod
@@ -60,3 +62,11 @@ class AdsFilter(SearchFilter):
                 pass  # todo need to add order via most rated
                 # return queryset.order_by("-created_at")
         return queryset
+
+    @staticmethod
+    def filter_region(queryset, name, value):
+        return queryset.filter(district__region_id=int(value))
+
+    @staticmethod
+    def filter_district(queryset, name, value):
+        return queryset.filter(district_id=int(value))

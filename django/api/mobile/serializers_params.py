@@ -16,4 +16,6 @@ class DistrictParamsSerializer(SearchSerializer, PaginationSerializer):
     region = serializers.IntegerField(required=False)
 
 class AdsListSerializer(SearchSerializer, PaginationSerializer):
+    region = serializers.IntegerField(required=False)
+    district = serializers.IntegerField(required=False)
     ordering = serializers.ChoiceField(choices=["created_at", "-created_at", "most_viewed", "most_rated"], required=False)

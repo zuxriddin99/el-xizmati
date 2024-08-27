@@ -21,6 +21,7 @@ urlpatterns = [
 
     # AD
     path("ads/", ADSAPIView.as_view({"post": "ads_create", "get": "ads_list"}), name="ads"),
+    path("ads/<int:pk>/", ADSAPIView.as_view({"get": "ads_detail", }), name="ad-detail"),
 
     # Test routes
     path("test/get-token/", TestAPIView.as_view({"post": "get_jwt"}), name="test"),
