@@ -70,3 +70,16 @@ class AdsFilter(SearchFilter):
     @staticmethod
     def filter_district(queryset, name, value):
         return queryset.filter(district_id=int(value))
+
+class WorkerOffersFilter(SearchFilter):
+    region = filters.CharFilter(method="filter_region")
+    status = filters.CharFilter(method="filter_status")
+
+
+    @staticmethod
+    def filter_search(queryset, name, value):
+        return queryset.filter(status=value)
+
+    @staticmethod
+    def filter_status(queryset, name, value):
+        return queryset.filter(Q(ad__name__icontains=value) | Q(ad__description__icontains=value))

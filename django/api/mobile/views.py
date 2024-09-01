@@ -6,7 +6,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 
 from api.mobile import serializers, serializers_response, serializers_params
-from api.mobile.filters import DistrictsFilter, RegionsFilter, AdsFilter
+from api.mobile.filters import DistrictsFilter, RegionsFilter, AdsFilter, WorkerOffersFilter
 from api.views import GenericAPIView
 from conf.pagination import CustomPagination
 from services.address_service import RegionService, DistrictService
@@ -345,10 +345,12 @@ class OfferAPIView(GenericAPIView):
 class WorkerOfferAPIView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     offer_service = OfferService()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = WorkerOffersFilter
 
     @extend_schema(
         tags=["offers"],
-        parameters=[],
+        parameters=[serializers_params.WorkerOffersFilterSerializer],
         responses={
             status.HTTP_200_OK: serializers_response.WorkerOfferResponseDataSerializer,
             status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
@@ -359,9 +361,10 @@ class WorkerOfferAPIView(GenericAPIView):
     def offers_list(self, request, *args, **kwargs):
         user_id = request.user.id
         offers = self.offer_service.get_worker_offers(user_id=user_id)
+        filtered_queryset = self.filter_queryset(offers)
         result = self.get_response_data(
             serializer_class=serializers_response.WorkerOfferListSerializer,
-            instance=offers,
+            instance=filtered_queryset,
             context=self.get_serializer_context(),
             many=True
         )
