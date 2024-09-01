@@ -7,7 +7,7 @@ from fcm_django.models import FCMDevice
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from apps.ads.models import Category, AD, ADMedia
+from apps.ads.models import Category, AD, ADMedia, Offer
 from apps.main.models import Region, District
 from apps.users.models import User
 
@@ -206,3 +206,44 @@ class ADListPaginationResponseSerializer(BasePaginationSerializer):
 
 class ADListResponseSerializer(BaseResponseSerializer):
     data = ADListPaginationResponseSerializer()
+
+
+class SendOfferResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Offer
+        fields = [
+            "id",
+            "status",
+            "ad",
+        ]
+
+
+class SendOfferResponseDataSerializer(BaseResponseSerializer):
+    data = SendOfferResponseSerializer()
+
+
+class OfferAdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AD
+        fields = [
+            "id",
+            "name",
+            "description",
+            "price",
+        ]
+
+class WorkerOfferListSerializer(serializers.ModelSerializer):
+    ad = OfferAdSerializer(required=True)
+    class Meta:
+        model = Offer
+        fields = [
+            "id",
+            "status",
+            "ad"
+        ]
+
+class WorkerOfferListPaginationSerializer(BasePaginationSerializer):
+    results = WorkerOfferListSerializer(many=True)
+
+class WorkerOfferResponseDataSerializer(BaseResponseSerializer):
+    data = WorkerOfferListPaginationSerializer()

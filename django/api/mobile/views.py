@@ -12,6 +12,7 @@ from conf.pagination import CustomPagination
 from services.address_service import RegionService, DistrictService
 from services.ads_service import AdsService
 from services.category_service import CategoryService
+from services.offer_service import OfferService
 from services.test_service import GetJwtService
 from services.user_service import AuthService
 
@@ -187,7 +188,6 @@ class ADSAPIView(GenericAPIView):
         )
         return Response(result, status=status.HTTP_200_OK)
 
-
     @extend_schema(
         tags=["ads"],
         parameters=[serializers_params.AdsListSerializer],
@@ -255,5 +255,114 @@ class TestAPIView(GenericAPIView):
             serializer_class=serializers_response.TokensSerializer,
             instance=tokens,
             context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class OfferAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    offer_service = OfferService()
+
+    @extend_schema(
+        tags=["offers"],
+        request={"application/json": serializers.SendOfferSerializer},
+        responses={
+            status.HTTP_201_CREATED: serializers_response.SendOfferResponseDataSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Send offer",
+        description="Send offer",
+    )
+    def send_offer(self, request, *args, **kwargs):
+        serializer = serializers.SendOfferSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        ad_id = serializer.validated_data["user_id"]
+        user_id = request.user.id
+        offer = self.offer_service.send_offer(ad_id=ad_id, user_id=user_id)
+        result = self.get_response_data(
+            serializer_class=serializers_response.SendOfferResponseSerializer,
+            instance=offer,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_201_CREATED)
+
+    @extend_schema(
+        tags=["offers"],
+        request={"application/json": serializers.UpdateOfferSerializer},
+        responses={
+            status.HTTP_200_OK: serializers_response.BaseResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Accept offer",
+        description="Accept offer",
+    )
+    def accept_offer(self, request, *args, **kwargs):
+        serializer = serializers.UpdateOfferSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        offer_id = serializer.validated_data["offer_id"]
+        user_id = request.user.id
+        self.offer_service.accept_offer(offer_id=offer_id, user_id=user_id)
+        return Response({}, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["offers"],
+        request={"application/json": serializers.UpdateOfferSerializer},
+        responses={
+            status.HTTP_200_OK: serializers_response.BaseResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Cancel offer",
+        description="Cancel offer",
+    )
+    def cancel_offer(self, request, *args, **kwargs):
+        serializer = serializers.UpdateOfferSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        offer_id = serializer.validated_data["offer_id"]
+        user_id = request.user.id
+        self.offer_service.cancel_offer(offer_id=offer_id, user_id=user_id)
+        return Response({}, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["offers"],
+        request={"application/json": serializers.UpdateOfferSerializer},
+        responses={
+            status.HTTP_200_OK: serializers_response.BaseResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Complete offer",
+        description="Complete offer",
+    )
+    def complete_offer(self, request, *args, **kwargs):
+        serializer = serializers.UpdateOfferSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        offer_id = serializer.validated_data["offer_id"]
+        user_id = request.user.id
+        self.offer_service.complete_offer(offer_id=offer_id, user_id=user_id)
+        return Response({}, status=status.HTTP_200_OK)
+
+
+
+class WorkerOfferAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    offer_service = OfferService()
+
+    @extend_schema(
+        tags=["offers"],
+        parameters=[],
+        responses={
+            status.HTTP_200_OK: serializers_response.WorkerOfferResponseDataSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Worker offers list",
+        description="Worker offers list",
+    )
+    def offers_list(self, request, *args, **kwargs):
+        user_id = request.user.id
+        offers = self.offer_service.get_worker_offers(user_id=user_id)
+        result = self.get_response_data(
+            serializer_class=serializers_response.WorkerOfferListSerializer,
+            instance=offers,
+            context=self.get_serializer_context(),
+            many=True
         )
         return Response(result, status=status.HTTP_200_OK)

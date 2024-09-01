@@ -40,6 +40,7 @@ class AuthUserSetInfoSerializer(serializers.ModelSerializer):
             "district",
         ]
 
+
 class AdCreateSerializer(serializers.ModelSerializer):
     medias = serializers.ListField(child=CustomFileField(), required=False)
 
@@ -58,5 +59,13 @@ class AdCreateSerializer(serializers.ModelSerializer):
             "medias",
         ]
 
+
 class GetUserJwtSerializer(serializers.Serializer):
     user_id = serializers.IntegerField(required=False)
+
+
+class SendOfferSerializer(serializers.Serializer):
+    ad_id = serializers.IntegerField(required=True)
+
+class UpdateOfferSerializer(serializers.Serializer):
+    offer_id = serializers.IntegerField(required=True)

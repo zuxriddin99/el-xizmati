@@ -3,7 +3,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-
 class Category(BaseModel):
     icon = models.FileField(upload_to="categories/", null=True)
     name_oz = models.CharField(verbose_name="Uzbek kyril", max_length=150, default="")
@@ -35,7 +34,6 @@ class Category(BaseModel):
                 return self.name_uz
 
 
-
 class WorkTypeEnum(models.TextChoices):
     ONE_TIME = "one_time", _("One Time Job")
     MANY_TIME = "many_time", _("Many Time Job")
@@ -53,6 +51,7 @@ class AD(BaseModel):
     longitude = models.FloatField(blank=True, null=True)
     address = models.CharField(default="", max_length=300, blank=True)
     is_active = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
 
@@ -73,3 +72,25 @@ class ADMedia(BaseModel):
 
     def __str__(self):
         return self.ad.name
+
+
+class OfferStatus(models.TextChoices):
+    NEW = "new", _("New")
+    PROCESSING = "processing", _("Processing")
+    COMPLETED = "completed", _("Completed")
+    CANCELED = "canceled", _("Canceled")
+
+
+class Offer(BaseModel):
+    status = models.CharField(choices=OfferStatus.choices, default=OfferStatus.NEW, max_length=10)
+    ad = models.ForeignKey(AD, related_name="ad_offers", on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", related_name="user_offers", on_delete=models.CASCADE)
+    worker_was_completed = models.BooleanField(default=False)
+    owner_was_confirmed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.status
+
+    class Meta:
+        db_table = "offers"
+        unique_together = (("user", "ad"),)

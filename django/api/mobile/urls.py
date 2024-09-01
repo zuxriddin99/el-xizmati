@@ -1,4 +1,5 @@
-from api.mobile.views import AuthAPIView, CategoriesAPIView, DistrictAPIView, RegionsAPIView, ADSAPIView, TestAPIView
+from api.mobile.views import AuthAPIView, CategoriesAPIView, DistrictAPIView, RegionsAPIView, ADSAPIView, TestAPIView, \
+    OfferAPIView, WorkerOfferAPIView
 from django.urls import include, path
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
@@ -22,6 +23,13 @@ urlpatterns = [
     # AD
     path("ads/", ADSAPIView.as_view({"post": "ads_create", "get": "ads_list"}), name="ads"),
     path("ads/<int:pk>/", ADSAPIView.as_view({"get": "ads_detail", }), name="ad-detail"),
+
+    # Offer
+    path("offer/send/", OfferAPIView.as_view({"post": "send_offer"}), name="send_offer"),
+    path("offer/accept/", OfferAPIView.as_view({"post": "accept_offer"}), name="accept_offer"),
+    path("offer/cancel/", OfferAPIView.as_view({"post": "cancel_offer"}), name="cancel_offer"),
+    path("offer/complate/", OfferAPIView.as_view({"post": "complete_offer"}), name="complete_offer"),
+    path("worker/offers/", WorkerOfferAPIView.as_view({"get": "offers_list"}), name="offers_list"),
 
     # Test routes
     path("test/get-token/", TestAPIView.as_view({"post": "get_jwt"}), name="test"),
