@@ -63,12 +63,12 @@ def ad_media_directory_path(instance, filename):
 
 class ADMedia(BaseModel):
     class MediaTypeEnum(models.TextChoices):
-        image = "image", _("Image")
-        video = "video", _("Video")
+        IMAGE = "image", _("Image")
+        VIDEO = "video", _("Video")
 
     ad = models.ForeignKey(AD, related_name="ad_medias", on_delete=models.CASCADE)
     file = models.FileField(upload_to=ad_media_directory_path)
-    media_type = models.CharField(max_length=6, choices=MediaTypeEnum.choices, default=MediaTypeEnum.image)
+    media_type = models.CharField(max_length=6, choices=MediaTypeEnum.choices, default=MediaTypeEnum.IMAGE)
 
     def __str__(self):
         return self.ad.name

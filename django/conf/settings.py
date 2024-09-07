@@ -50,12 +50,12 @@ LIBS = [
     "drf_spectacular",
     'django_celery_beat',
     "django_celery_results",
-
 ]
 APPS = [
     "apps.users",
     "apps.main",
     "apps.ads",
+    "apps.chat",
 ]
 INSTALLED_APPS = BASE_APPS + LIBS + APPS
 
