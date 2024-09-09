@@ -1,5 +1,5 @@
 from api.mobile.views import AuthAPIView, CategoriesAPIView, DistrictAPIView, RegionsAPIView, ADSAPIView, TestAPIView, \
-    OfferAPIView, WorkerOfferAPIView
+    OfferAPIView, WorkerOfferAPIView, ChatAPIView, MessageAPIView
 from django.urls import include, path
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 
@@ -30,6 +30,11 @@ urlpatterns = [
     path("offer/cancel/", OfferAPIView.as_view({"post": "cancel_offer"}), name="cancel_offer"),
     path("offer/complate/", OfferAPIView.as_view({"post": "complete_offer"}), name="complete_offer"),
     path("worker/offers/", WorkerOfferAPIView.as_view({"get": "offers_list"}), name="offers_list"),
+
+    # Chat
+    path("chats/", ChatAPIView.as_view({"get": "chats_list"})),
+    path("chats/messages/", MessageAPIView.as_view({"post": "send_message"})),
+    path("chats/<int:pk>/messages/", MessageAPIView.as_view({"get": "messages_list"})),
 
     # Test routes
     path("test/get-token/", TestAPIView.as_view({"post": "get_jwt"}), name="test"),

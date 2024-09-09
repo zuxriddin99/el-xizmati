@@ -12,6 +12,7 @@ from conf.pagination import CustomPagination
 from services.address_service import RegionService, DistrictService
 from services.ads_service import AdsService
 from services.category_service import CategoryService
+from services.chat_service import ChatService, MessageService
 from services.offer_service import OfferService
 from services.test_service import GetJwtService
 from services.user_service import AuthService
@@ -341,7 +342,6 @@ class OfferAPIView(GenericAPIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-
 class WorkerOfferAPIView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     offer_service = OfferService()
@@ -367,5 +367,82 @@ class WorkerOfferAPIView(GenericAPIView):
             instance=filtered_queryset,
             context=self.get_serializer_context(),
             many=True
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class ChatAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    chat_service = ChatService()
+
+    @extend_schema(
+        tags=["chats"],
+        request={"application/json": serializers.SendOfferSerializer},
+        responses={
+            status.HTTP_200_OK: serializers_response.ChatListResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Chats list",
+        description="Chats list",
+    )
+    def chats_list(self, request, *args, **kwargs):
+        user = request.user
+        chats = self.chat_service.chats_list(request_user=user)
+
+        result = self.get_response_data(
+            serializer_class=serializers_response.ChatsListResponseSerializer,
+            instance=chats,
+            many=True,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class MessageAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    msg_service = MessageService()
+
+    @extend_schema(
+        tags=["chats"],
+        request={"multipart/form-data": serializers.SendMessageSerializer},
+        responses={
+            status.HTTP_201_CREATED: serializers_response.MessageCreateResponseDataSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Message create",
+        description="Message create",
+    )
+    def send_message(self, request, *args, **kwargs):
+        serializer = serializers.SendMessageSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        message = self.msg_service.create_message(user=user, **serializer.validated_data)
+        result = self.get_response_data(
+            serializer_class=serializers_response.MessageCreateResponseSerializer,
+            instance=message,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_201_CREATED)
+
+    @extend_schema(
+        tags=["chats"],
+        parameters=[serializers_params.PaginationSerializer],
+        responses={
+            status.HTTP_200_OK: serializers_response.MessageListResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Messages list",
+        description="Messages list",
+    )
+    def messages_list(self, request, *args, **kwargs):
+        chat_id = kwargs.get("pk")
+        messages = self.msg_service.get_messages(chat_id=chat_id)
+        context = self.get_serializer_context()
+        context["user_id"] = request.user.id
+        result = self.get_response_data(
+            serializer_class=serializers_response.MessageSerializer,
+            instance=messages,
+            many=True,
+            context=context
         )
         return Response(result, status=status.HTTP_200_OK)

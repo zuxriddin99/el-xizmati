@@ -3,6 +3,7 @@ from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from apps.ads.models import AD
+from apps.chat.models import Message
 from apps.users.models import User, UserRoleEnum
 from apps.users.validator import validate_uzbekistan_phone
 
@@ -67,5 +68,19 @@ class GetUserJwtSerializer(serializers.Serializer):
 class SendOfferSerializer(serializers.Serializer):
     ad_id = serializers.IntegerField(required=True)
 
+
 class UpdateOfferSerializer(serializers.Serializer):
     offer_id = serializers.IntegerField(required=True)
+
+
+class SendMessageSerializer(serializers.ModelSerializer):
+    medias = serializers.ListField(child=CustomFileField(), required=False)
+
+    class Meta:
+        model = Message
+        fields = [
+            "chat",
+            "text",
+            "parent",
+            "medias",
+        ]

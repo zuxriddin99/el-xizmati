@@ -21,7 +21,7 @@ class AdsService:
 
     @staticmethod
     def get_ads_list():
-        return AD.objects.filter(is_active=True)
+        return AD.objects.filter(is_active=True).order_by("-created_at")
 
     @staticmethod
     def get_ad_detail(owner_id: int, ad_pk: int):

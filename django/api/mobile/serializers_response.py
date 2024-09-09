@@ -8,6 +8,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from apps.ads.models import Category, AD, ADMedia, Offer
+from apps.chat.models import Chat, Message
 from apps.main.models import Region, District
 from apps.users.models import User
 
@@ -58,11 +59,9 @@ class CategoriesSerializer(serializers.ModelSerializer):
         model = Category
         fields = ["id", "name", "icon"]
 
-
     def get_name(self, obj):
         language = self.context["request"].headers.get('Accept-Language', 'en')
         return obj.get_name(language)
-
 
 
 class CategoriesPaginationSerializer(BasePaginationSerializer):
@@ -83,7 +82,6 @@ class RegionsSerializer(serializers.ModelSerializer):
     def get_name(self, obj):
         language = self.context["request"].headers.get('Accept-Language', 'en')
         return obj.get_name(language)
-
 
 
 class RegionsPaginationSerializer(BasePaginationSerializer):
@@ -200,6 +198,7 @@ class AdListSerializer(serializers.ModelSerializer):
             "created_at",
         ]
 
+
 class ADListPaginationResponseSerializer(BasePaginationSerializer):
     results = AdListSerializer(many=True)
 
@@ -232,8 +231,10 @@ class OfferAdSerializer(serializers.ModelSerializer):
             "price",
         ]
 
+
 class WorkerOfferListSerializer(serializers.ModelSerializer):
     ad = OfferAdSerializer(required=True)
+
     class Meta:
         model = Offer
         fields = [
@@ -242,8 +243,114 @@ class WorkerOfferListSerializer(serializers.ModelSerializer):
             "ad"
         ]
 
+
 class WorkerOfferListPaginationSerializer(BasePaginationSerializer):
     results = WorkerOfferListSerializer(many=True)
 
+
 class WorkerOfferResponseDataSerializer(BaseResponseSerializer):
     data = WorkerOfferListPaginationSerializer()
+
+
+class ChatPartnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "photo", "first_name", "last_name"]
+
+
+class ChatLastMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ["id", "text"]
+
+
+class ChatsListResponseSerializer(serializers.ModelSerializer):
+    partner = serializers.SerializerMethodField()
+    last_message = ChatLastMessageSerializer(required=False)
+
+    class Meta:
+        model = Chat
+        fields = ["id", "partner", "last_message", "count_unread_messages"]
+
+    @extend_schema_field(ChatPartnerSerializer)
+    def get_partner(self, obj: Chat):
+        partner = obj.get_partner(self.context["request"].user.id)
+        data = ChatPartnerSerializer(partner, context=self.context).data
+        return data
+
+
+class ChatListPaginationSerializer(BasePaginationSerializer):
+    results = ChatsListResponseSerializer(many=True)
+
+
+class ChatListResponseSerializer(BaseResponseSerializer):
+    data = ChatsListResponseSerializer()
+
+
+class MessageAdSerializer(serializers.ModelSerializer):
+    district = serializers.CharField(source="district.name")
+
+    class Meta:
+        model = AD
+        fields = [
+            "id",
+            "name",
+            "description",
+            "price",
+            "work_type",
+            "district",
+            "created_at",
+        ]
+
+
+class MessageParentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = [
+            "id",
+            "text",
+        ]
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    ad = MessageAdSerializer(required=False)
+    parent = MessageParentSerializer(required=False)
+    is_own_message = serializers.SerializerMethodField(default=False)
+
+    class Meta:
+        model = Message
+        fields = [
+            "id",
+            "text",
+            "parent",
+            "author",
+            "was_read",
+            "ad",
+            "is_own_message",
+        ]
+
+    def get_is_own_message(self, obj):
+        return self.context["user_id"] == obj.author_id
+
+
+class MessagePaginationSerializer(BasePaginationSerializer):
+    results = MessageSerializer(many=True)
+
+
+class MessageListResponseSerializer(BaseResponseSerializer):
+    data = MessagePaginationSerializer()
+
+
+class MessageCreateResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = [
+            "id",
+            "text",
+            "parent",
+            "author",
+        ]
+
+
+class MessageCreateResponseDataSerializer(BaseResponseSerializer):
+    data = MessageCreateResponseSerializer()
