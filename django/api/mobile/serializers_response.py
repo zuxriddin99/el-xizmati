@@ -10,7 +10,7 @@ from rest_framework.exceptions import ValidationError
 from apps.ads.models import Category, AD, ADMedia, Offer
 from apps.chat.models import Chat, Message
 from apps.main.models import Region, District
-from apps.users.models import User
+from apps.users.models import User, UserNotification
 
 
 class BaseResponseSerializer(serializers.Serializer):
@@ -354,3 +354,19 @@ class MessageCreateResponseSerializer(serializers.ModelSerializer):
 
 class MessageCreateResponseDataSerializer(BaseResponseSerializer):
     data = MessageCreateResponseSerializer()
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserNotification
+        fields = [
+            "id", "notif_type", "title", "description", "image", "offer_id"
+        ]
+
+
+class NotificationPaginationResponseSerializer(BasePaginationSerializer):
+    results = NotificationSerializer(many=True)
+
+
+class NotificationResponseSerializer(BaseResponseSerializer):
+    data = NotificationPaginationResponseSerializer()

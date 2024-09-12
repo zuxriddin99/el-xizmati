@@ -82,6 +82,7 @@ class UserNotification(BaseModel):
     title = models.CharField(max_length=250)
     description = models.TextField(default="")
     image = models.ImageField(upload_to=user_notif_image_directory_path, null=True, blank=True)
+    offer_id = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.title

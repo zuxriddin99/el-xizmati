@@ -13,6 +13,7 @@ from services.address_service import RegionService, DistrictService
 from services.ads_service import AdsService
 from services.category_service import CategoryService
 from services.chat_service import ChatService, MessageService
+from services.notification_service import NotificationService
 from services.offer_service import OfferService
 from services.test_service import GetJwtService
 from services.user_service import AuthService
@@ -446,3 +447,29 @@ class MessageAPIView(GenericAPIView):
             context=context
         )
         return Response(result, status=status.HTTP_200_OK)
+
+
+class NotificationAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    notification_service = NotificationService()
+
+    @extend_schema(
+        tags=["notifications"],
+        responses={
+            status.HTTP_200_OK: serializers_response.NotificationResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="User notifications",
+        description="Message create",
+    )
+    def notifications_list(self, request, *args, **kwargs):
+        user = request.user
+        notifications = self.notification_service.user_notifications(user=user)
+        result = self.get_response_data(
+            serializer_class=serializers_response.NotificationSerializer,
+            instance=notifications,
+            many=True,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
