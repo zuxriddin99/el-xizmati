@@ -24,9 +24,15 @@ class AuthService:
         phone_number = kwargs.get('phone_number')
         code = kwargs.get('code')
         try:
+            UserAction.objects.get(phone_number=phone_number)
+        except UserAction.DoesNotExist:
+            raise exceptions.NotFound(detail='For the number not sent sms before that use auth/send-sms/ endpoint',
+                                      code="WRONG_CODE")
+
+        try:
             UserAction.objects.get(phone_number=phone_number, code=code)
         except UserAction.DoesNotExist:
-            raise ValidationError(detail='Wrong code', code="WRONG_CODE")
+            raise exceptions.NotFound(detail='Wrong code', code="WRONG_CODE")
 
         user, is_created = User.objects.get_or_create(phone_number=phone_number)
         return {
