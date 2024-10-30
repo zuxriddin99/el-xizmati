@@ -56,3 +56,10 @@ class AuthService:
 
         user.save()
         return user
+
+
+class UserService:
+    @staticmethod
+    def update_user_role(user: User, role: str):
+        user.role = role
+        user.save()

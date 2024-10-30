@@ -84,3 +84,6 @@ class SendMessageSerializer(serializers.ModelSerializer):
             "parent",
             "medias",
         ]
+
+class ChangeUserRoleSerializer(serializers.Serializer):
+    role = serializers.ChoiceField(choices=UserRoleEnum.choices)

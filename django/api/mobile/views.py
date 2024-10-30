@@ -16,7 +16,7 @@ from services.chat_service import ChatService, MessageService
 from services.notification_service import NotificationService
 from services.offer_service import OfferService
 from services.test_service import GetJwtService
-from services.user_service import AuthService
+from services.user_service import AuthService, UserService
 
 
 class AuthAPIView(GenericAPIView):
@@ -103,6 +103,28 @@ class CategoriesAPIView(GenericAPIView):
             context=self.get_serializer_context()
         )
         return Response(result, status=status.HTTP_200_OK)
+
+
+class UserAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    service = UserService()
+
+    @extend_schema(
+        tags=["users"],
+        request=serializers.ChangeUserRoleSerializer,
+        responses={
+            status.HTTP_200_OK: serializers_response.BaseResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Update user role",
+        description="Update user role",
+    )
+    def change_role(self, request, *args, **kwargs):
+        serializer = serializers.ChangeUserRoleSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        role = serializer.validated_data["role"]
+        self.service.update_user_role(user=self.request.user, role=role)
+        return Response({}, status=status.HTTP_200_OK)
 
 
 class RegionsAPIView(GenericAPIView):
@@ -472,4 +494,3 @@ class NotificationAPIView(GenericAPIView):
             context=self.get_serializer_context()
         )
         return Response(result, status=status.HTTP_200_OK)
-
