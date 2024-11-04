@@ -63,3 +63,7 @@ class OfferService:
     @staticmethod
     def get_worker_offers(user_id: int):
         return Offer.objects.filter(user_id=user_id)
+
+    @staticmethod
+    def get_employer_offers(user_id: int):
+        return Offer.objects.filter(ad__owner_id=user_id)

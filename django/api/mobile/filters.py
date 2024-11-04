@@ -77,9 +77,9 @@ class WorkerOffersFilter(SearchFilter):
 
 
     @staticmethod
-    def filter_search(queryset, name, value):
+    def filter_status(queryset, name, value):
         return queryset.filter(status=value)
 
     @staticmethod
-    def filter_status(queryset, name, value):
+    def filter_region(queryset, name, value):
         return queryset.filter(Q(ad__name__icontains=value) | Q(ad__description__icontains=value))

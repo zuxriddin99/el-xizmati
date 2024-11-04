@@ -252,6 +252,19 @@ class OfferAdSerializer(serializers.ModelSerializer):
 
 class WorkerOfferListSerializer(serializers.ModelSerializer):
     ad = OfferAdSerializer(required=True)
+    owner = ADOwnerSerializer()
+
+    class Meta:
+        model = Offer
+        fields = [
+            "id",
+            "status",
+            "owner",
+            "ad"
+        ]
+
+class EmployerOfferListSerializer(serializers.ModelSerializer):
+    ad = OfferAdSerializer(required=True)
 
     class Meta:
         model = Offer
@@ -261,6 +274,13 @@ class WorkerOfferListSerializer(serializers.ModelSerializer):
             "ad"
         ]
 
+
+class EmployerOfferListPaginationSerializer(BasePaginationSerializer):
+    results = EmployerOfferListSerializer(many=True)
+
+
+class EmployerOfferResponseDataSerializer(BaseResponseSerializer):
+    data = EmployerOfferListPaginationSerializer()
 
 class WorkerOfferListPaginationSerializer(BasePaginationSerializer):
     results = WorkerOfferListSerializer(many=True)

@@ -416,6 +416,34 @@ class WorkerOfferAPIView(GenericAPIView):
         )
         return Response(result, status=status.HTTP_200_OK)
 
+class EmployerOfferAPIView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    offer_service = OfferService()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = WorkerOffersFilter
+
+    @extend_schema(
+        tags=["offers"],
+        parameters=[serializers_params.WorkerOffersFilterSerializer],
+        responses={
+            status.HTTP_200_OK: serializers_response.EmployerOfferResponseDataSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Employer offers list",
+        description="Employer offers list",
+    )
+    def offers_list(self, request, *args, **kwargs):
+        user_id = request.user.id
+        offers = self.offer_service.get_employer_offers(user_id=user_id)
+        filtered_queryset = self.filter_queryset(offers)
+        result = self.get_response_data(
+            serializer_class=serializers_response.EmployerOfferListSerializer,
+            instance=filtered_queryset,
+            context=self.get_serializer_context(),
+            many=True
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
 
 class ChatAPIView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
