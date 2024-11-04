@@ -198,6 +198,24 @@ class AdListSerializer(serializers.ModelSerializer):
             "created_at",
         ]
 
+class OwnADSListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AD
+        fields = [
+            "id",
+            "name",
+            "price",
+            "work_type",
+            "is_active",
+            "created_at",
+        ]
+
+class OwnADListPaginationResponseSerializer(BasePaginationSerializer):
+    results = OwnADSListSerializer(many=True)
+
+
+class OwnADListResponseSerializer(BaseResponseSerializer):
+    data = OwnADListPaginationResponseSerializer()
 
 class ADListPaginationResponseSerializer(BasePaginationSerializer):
     results = AdListSerializer(many=True)

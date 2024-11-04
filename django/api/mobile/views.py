@@ -237,6 +237,29 @@ class ADSAPIView(GenericAPIView):
 
     @extend_schema(
         tags=["ads"],
+        parameters=[serializers_params.AdsListSerializer],
+        responses={
+            status.HTTP_201_CREATED: serializers_response.OwnADListResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Ads list",
+        description="Ads list",
+    )
+    def own_ads_list(self, request, *args, **kwargs):
+        serializer = serializers_params.AdsListSerializer(data=request.GET, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        ads = self.ads_service.get_own_ads_list(user=request.user)
+        filtered_queryset = self.filter_queryset(ads)
+        result = self.get_response_data(
+            serializer_class=serializers_response.OwnADSListSerializer,
+            instance=filtered_queryset,
+            many=True,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["ads"],
         responses={
             status.HTTP_201_CREATED: serializers_response.ADDetailResponseSerializer,
             status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,

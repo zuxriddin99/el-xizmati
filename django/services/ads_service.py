@@ -24,6 +24,11 @@ class AdsService:
         return AD.objects.filter(is_active=True).order_by("-created_at")
 
     @staticmethod
+    def get_own_ads_list(user: User):
+        return AD.objects.filter(owner=user).order_by("-created_at")
+
+
+    @staticmethod
     def get_ad_detail(owner_id: int, ad_pk: int):
         try:
             return AD.objects.get(pk=ad_pk, owner_id=owner_id)
