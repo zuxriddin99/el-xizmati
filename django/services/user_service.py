@@ -64,3 +64,13 @@ class UserService:
         user.role = role
         user.save()
 
+
+    @staticmethod
+    def update_user(user: User, **kwargs):
+        if user.is_anonymous:
+            raise exceptions.NotFound(detail='User does not exist', code="USER_DOES_NOT_EXIST")
+        for key, value in kwargs.items():
+            setattr(user, key, value)
+
+        user.save()
+        return user

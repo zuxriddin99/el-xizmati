@@ -143,6 +143,27 @@ class UserAPIView(GenericAPIView):
         )
         return Response(result, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        tags=["users"],
+        request={'multipart/form-data': serializers.UserUpdateSerializer},
+        responses={
+            status.HTTP_200_OK: serializers_response.UserDetailResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Update user profile",
+        description="Update user profile",
+    )
+    def update_user(self, request, *args, **kwargs):
+        serializer = serializers.UserUpdateSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        user = self.service.update_user(user= request.user, **serializer.validated_data)
+        result = self.get_response_data(
+            serializer_class=serializers_response.UserDetailSerializer,
+            instance=user,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
 
 class RegionsAPIView(GenericAPIView):
     permission_classes = [permissions.AllowAny]

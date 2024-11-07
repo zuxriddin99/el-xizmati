@@ -85,5 +85,20 @@ class SendMessageSerializer(serializers.ModelSerializer):
             "medias",
         ]
 
+
 class ChangeUserRoleSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=UserRoleEnum.choices)
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    photo = CustomFileField(required=False)
+
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "language",
+            "photo",
+            "district",
+        ]
