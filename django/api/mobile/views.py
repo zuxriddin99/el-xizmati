@@ -126,6 +126,23 @@ class UserAPIView(GenericAPIView):
         self.service.update_user_role(user=self.request.user, role=role)
         return Response({}, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        tags=["users"],
+        responses={
+            status.HTTP_200_OK: serializers_response.UserDetailResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: serializers_response.BaseResponseSerializer,
+        },
+        summary="Get user profile",
+        description="Get user profile",
+    )
+    def get_user(self, request, *args, **kwargs):
+        result = self.get_response_data(
+            serializer_class=serializers_response.UserDetailSerializer,
+            instance=request.user,
+            context=self.get_serializer_context()
+        )
+        return Response(result, status=status.HTTP_200_OK)
+
 
 class RegionsAPIView(GenericAPIView):
     permission_classes = [permissions.AllowAny]

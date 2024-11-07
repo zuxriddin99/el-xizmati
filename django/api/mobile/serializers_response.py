@@ -408,3 +408,20 @@ class NotificationPaginationResponseSerializer(BasePaginationSerializer):
 
 class NotificationResponseSerializer(BaseResponseSerializer):
     data = NotificationPaginationResponseSerializer()
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "phone_number",
+            "language",
+            "photo",
+            "passport_serial_number",
+            "role",
+            "district",
+        ]
+class UserDetailResponseSerializer(BaseResponseSerializer):
+    data = UserDetailSerializer()
+

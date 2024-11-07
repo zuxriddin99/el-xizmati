@@ -47,4 +47,5 @@ urlpatterns = [
 
     # User
     path("user/change-role/", UserAPIView.as_view({"post": "change_role"})),
+    path("user/", UserAPIView.as_view({"get": "get_user"})),
 ]
