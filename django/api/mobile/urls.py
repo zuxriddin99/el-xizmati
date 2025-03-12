@@ -23,7 +23,7 @@ urlpatterns = [
 
     # AD
     path("ads/", ADSAPIView.as_view({"post": "ads_create", "get": "ads_list"}), name="ads"),
-    path("ownd/ads/", ADSAPIView.as_view({"get": "own_ads_list"}), name="own-ads"),
+    path("own/ads/", ADSAPIView.as_view({"get": "own_ads_list"}), name="own-ads"),
     path("ads/<int:pk>/", ADSAPIView.as_view({"get": "ads_detail", }), name="ad-detail"),
 
     # Offer

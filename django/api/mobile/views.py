@@ -361,7 +361,7 @@ class OfferAPIView(GenericAPIView):
     def send_offer(self, request, *args, **kwargs):
         serializer = serializers.SendOfferSerializer(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
-        ad_id = serializer.validated_data["user_id"]
+        ad_id = serializer.validated_data["ad_id"]
         user_id = request.user.id
         offer = self.offer_service.send_offer(ad_id=ad_id, user_id=user_id)
         result = self.get_response_data(
