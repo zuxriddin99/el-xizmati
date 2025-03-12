@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.ads.models import Category, AD, ADMedia
+from apps.ads.models import Category, AD, ADMedia, Offer
 
 
 # Register your models here.
@@ -18,4 +18,9 @@ class ADMediaInline(admin.TabularInline):
 @admin.register(AD)
 class ADAdmin(admin.ModelAdmin):
     list_display = ["id", "owner", "name"]
+    inlines = [ADMediaInline]
+
+@admin.register(Offer)
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ["id", "ad", "user"]
     inlines = [ADMediaInline]
