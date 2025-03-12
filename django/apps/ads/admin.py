@@ -23,4 +23,3 @@ class ADAdmin(admin.ModelAdmin):
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
     list_display = ["id", "ad", "user"]
-    inlines = [ADMediaInline]
