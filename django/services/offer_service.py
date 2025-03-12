@@ -56,7 +56,7 @@ class OfferService:
     @staticmethod
     def get_offer_or_raise(offer_id: int):
         try:
-            return Offer.objects.get(ad_id=offer_id)
+            return Offer.objects.get(id=offer_id)
         except Offer.DoesNotExist:
             raise exceptions.NotFound(detail='Entered offer not found.', code="NOT_FOUND")
 
