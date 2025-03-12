@@ -252,14 +252,14 @@ class OfferAdSerializer(serializers.ModelSerializer):
 
 class WorkerOfferListSerializer(serializers.ModelSerializer):
     ad = OfferAdSerializer(required=True)
-    owner = ADOwnerSerializer()
+    user = ADOwnerSerializer()
 
     class Meta:
         model = Offer
         fields = [
             "id",
             "status",
-            "owner",
+            "user",
             "ad"
         ]
 
