@@ -106,8 +106,6 @@ services:
     volumes:
       - ./mounts/redis_data:/data
       - ./mounts/redis_conf:/conf
-    ports:
-      - :6379
     logging:
       options:
         max-size: "10m"
