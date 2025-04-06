@@ -63,7 +63,7 @@ services:
       file: common.yml
       service: nginx_base
     ports:
-      - ${NGINX_PORT:-80}:80
+      - ${NGINX_PORT:-80}:8002
     logging:
       options:
         max-size: "10m"
