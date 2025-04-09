@@ -33,26 +33,26 @@ services:
       service: redis_base
     expose:
       - ${REDIS_PORT:-6379}
-  celery_worker:
-      env_file:
-        - .env
-      extends:
-        file: common.yml
-        service: celery_worker_base
-  celery_beat:
-      env_file:
-        - .env
-      extends:
-        file: common.yml
-        service: celery_beat_base
-  flower:
-      env_file:
-        - .env
-      extends:
-        file: common.yml
-        service: flower_base
-      expose:
-        - "5555"
+#  celery_worker:
+#      env_file:
+#        - .env
+#      extends:
+#        file: common.yml
+#        service: celery_worker_base
+#  celery_beat:
+#      env_file:
+#        - .env
+#      extends:
+#        file: common.yml
+#        service: celery_beat_base
+#  flower:
+#      env_file:
+#        - .env
+#      extends:
+#        file: common.yml
+#        service: flower_base
+#      expose:
+#        - "5555"
 
   nginx:
     env_file:
