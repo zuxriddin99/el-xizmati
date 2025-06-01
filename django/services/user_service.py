@@ -5,16 +5,19 @@ from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.models import User, UserAction
+from services.eskiz_service import EskizService
 
 
 class AuthService:
+    sms_service = EskizService()
 
     def send_sms_to_phone(self, **kwargs):
         phone_number = kwargs.get('phone_number')
-        # code = self.generate_code()
-        code = "0000"
+        code = self.generate_code()
+        # code = "0000"
         user, _ = UserAction.objects.update_or_create(phone_number=phone_number, defaults={'code': code})
-        # todo need to add smm sender function
+        message = self.sms_service.generate_auth_sms(code)
+        self.sms_service.send_sms(phone_number, message)
 
     @staticmethod
     def generate_code():
@@ -63,7 +66,6 @@ class UserService:
     def update_user_role(user: User, role: str):
         user.role = role
         user.save()
-
 
     @staticmethod
     def update_user(user: User, **kwargs):

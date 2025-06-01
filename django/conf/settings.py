@@ -50,6 +50,7 @@ LIBS = [
     "drf_spectacular",
     'django_celery_beat',
     "django_celery_results",
+    "extra_settings",
 ]
 APPS = [
     "apps.users",
@@ -260,3 +261,5 @@ FCM_DJANGO_SETTINGS = {
 # FIREBASE_CREDS = os.environ.get("FIREBASE_CREDS", default="media/firebase_creds.json")
 # cred = credentials.Certificate(FIREBASE_CREDS)
 # firebase_admin.initialize_app(cred)
+ESKIZ_LOGIN = os.environ.get("ESKIZ_LOGIN", "")
+ESKIZ_PASSWORD= os.environ.get("ESKIZ_PASSWORD", "")
